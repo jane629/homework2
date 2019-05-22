@@ -86,11 +86,15 @@ studentRecord <-
 
 請將元素名稱「學年平均成績」改成「平均成績」。（此題最後一行請輸入studentRecord，老師改題時會看studentRecord的names有沒有正確更改。）
 ```{r ans11}
+names(studentRecord)[4] <- "平均成績"
+studentRecord
 ```
 
 ### 1.2
 請將"一年級"，"二年級"，"三年級"，"四年級"改成"一"，"二"，"三"，"四"。（hint: 改掉studentRecord[[4]]的元素名稱。）（此題最後一行請輸入studentRecord，老師改題時會看studentRecord的names有沒有正確更改。）
 ```{r ans12}
+names(studentRecord[[4]])[c(1,2,3,4)] <- c("一","二","三","四")
+studentRecord
 ```
 
 
@@ -114,17 +118,30 @@ commitCheck <- fromJSON(commitCheck, simplifyVector = F)
 ### 2.1
 請取出commitCheck第8個元素底下的**commit**元素，再拿出它底下的**committer**元素，再拿出它底下的**date**元素的第一個值，存成commit8Date答案物件（為character class) 。（最後一行最忘了打答案物件）
 ```{r ans21}
+commit8Date <- commitCheck[[8]][["commit"]][["committer"]][["date"]][[1]]
+commit8Date
 ```
 
 
 ### 2.2
 commit8Date的日期時間為UTC時間，請將它轉成台灣時間的date time class並存在答案物件commit8TWDate。（最後一行最忘了打答案物件）
 ```{r ans22}
+commit8Date <- ymd_hms(commit8Date)
+commit8TWDate <- with_tz(commit8Date, tzone = "asia/taipei")
+
+commit8TWDate
 ```
 
 ### 2.3
 原本commitCheck裡的元素沒有命名（`names(commitCheck)`會顯示NULL），請將這些元素依其位置順序命名為"commit1","commit2", "commit3"等等。此題最後一行請輸入commitCheck，老師改題時會看commitCheck的names有沒有正確更改。）(hint: `c(1:5)`可創出c(1,2,3,4,5); `length(commitCheck)`會給你commitCheck元素個數)
 ```{r ans23}
+names(commitCheck) <- 
+  str_c(
+    "commit", c(1:length(commitCheck))
+  )
+names(commitCheck)
+
+commitCheck
 ```
 
 ### 2.4
@@ -136,16 +153,26 @@ map(commitCheck,~.[[3]][[2]][[3]][[1]]) -> allCommitDatesList
 
 allCommitDatesList是個list，請使用`unlist()`函數將它轉成一個atomic vector其class為character，並存在allCommitDates答案物件。（最後一行最忘了打答案物件）
 ```{r ans24}
+unlist(allCommitDatesList) -> allCommitDates
+allCommitDates <- as.character(allCommitDates)
+allCommitDates
 ```
 
 ### 2.5 
 allCommitDates是UTC時區的時間文字字串，請將它轉成date time格式，再改成台灣時區後，存在allCommitDatesTW答案物件。（最後一行最忘了打答案物件）
 ```{r ans25}
+allCommitDates <- ymd_hms(allCommitDates)
+allCommitDatesTW <- with_tz(allCommitDates, tzone = "asia/taipei")
+allCommitDatesTW
 ```
 
 ### 2.6
 使用`hour()`及`minute()`可分別將date time元素的「小時」及「分鐘」取出（其中小時是24小時制）。請創立一個logical vector答案物件logicWithinTimeFrame，各個元素值為TRUE時代表allCommitDatesTW的時間落在凌晨4點30到凌晨6點30之間（含起迄時點）。（最後一行最忘了打答案物件）
 ```{r ans26}
+hour(allCommitDatesTW)
+minute(allCommitDatesTW)
+hm <- hours+minutes
+
 ```
 
 ## 3
